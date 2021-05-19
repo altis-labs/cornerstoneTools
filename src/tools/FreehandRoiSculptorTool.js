@@ -397,9 +397,17 @@ export default class FreehandRoiSculptorTool extends BaseTool {
       if (i === toolIndex) {
         let { roi } = data[i];
         this.pendingPushedRoi = roi;
-        data[i].active = true;
+        // perform copy, mutate and reassign
+        let dataCopy = data[i];
+        let setTrue = { active: true };
+        let newData = { ...dataCopy, ...setTrue };
+        data[i] = newData;
       } else {
-        data[i].active = false;
+        // perform copy, mutate and reassign
+        let dataCopy = data[i];
+        let setFalse = { active: false };
+        let newData = { ...dataCopy, ...setFalse };
+        data[i] = newData;
       }
     }
   }
@@ -952,8 +960,14 @@ export default class FreehandRoiSculptorTool extends BaseTool {
     config.currentTool = null;
 
     if (toolData) {
+      console.log(toolData);
       for (let i = 0; i < toolData.data.length; i++) {
-        toolData.data[i].active = false;
+        // perform copy and mutate copy
+        let dataCopy = toolData.data[i];
+        let setFalse = { active: false };
+        let newData = { ...dataCopy, ...setFalse };
+        // reassign data
+        toolData.data[i] = newData;
       }
     }
 

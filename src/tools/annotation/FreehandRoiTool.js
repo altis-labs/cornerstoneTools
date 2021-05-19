@@ -294,7 +294,10 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
     };
 
     // Store the bounding box information for the text box
-    data.polyBoundingBox = polyBoundingBox;
+    // create copy of data to overwrite it since data object is not extensible
+    let dataCopy = data;
+    dataCopy.polyBoundingBox = polyBoundingBox;
+    data = dataCopy;
 
     // First, make sure this is not a color image, since no mean / standard
     // Deviation will be calculated for color images.
