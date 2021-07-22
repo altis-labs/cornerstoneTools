@@ -90,6 +90,7 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
     this.selectedToolRoiId = null;
     this.visibleToolRoiIds = [];
     this.onContourRightClicked = null;
+    this.onContourDoubleClicked = null;
   }
 
   createNewMeasurement(eventData) {
@@ -136,13 +137,18 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
   }
 
   setToolRoiStates(roiStates) {
-    let { selectedContourToolRoiId, visibleToolRoiIds } = roiStates;
+    const { selectedContourToolRoiId, visibleToolRoiIds } = roiStates;
+
     this.selectedToolRoiId = selectedContourToolRoiId;
     this.visibleToolRoiIds = visibleToolRoiIds;
   }
 
   setOnContourRightClicked(onContourRightClicked) {
     this.onContourRightClicked = onContourRightClicked;
+  }
+
+  setOnContourDoubleClicked(onContourDoubleClicked) {
+    this.onContourDoubleClicked = onContourDoubleClicked;
   }
 
   /**
@@ -265,6 +271,7 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
     const modality = seriesModule ? seriesModule.modality : null;
 
     const points = data.handles.points;
+
     if (!points) {
       return;
     }
@@ -411,9 +418,9 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
     for (let i = 0; i < toolState.data.length; i++) {
       const data = toolState.data[i];
 
-      let { roi } = data;
+      const { roi } = data;
 
-      let isRoiVisible = this.isRoiVisible(roi);
+      const isRoiVisible = this.isRoiVisible(roi);
 
       if (!roi || !isRoiVisible || data.visible === false) {
         continue;
@@ -431,18 +438,18 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
 
         const lineWidthStyle = this.style.lineWidth;
 
-        let lineWidth = isSelected
+        const lineWidth = isSelected
           ? lineWidthStyle.selected
           : isActive
-          ? lineWidthStyle.active
-          : lineWidthStyle.passive;
+            ? lineWidthStyle.active
+            : lineWidthStyle.passive;
 
         const handleStyle = this.style.handleSize;
         let handleRadius = isSelected
           ? handleStyle.selected
           : isActive
-          ? handleStyle.active
-          : handleStyle.passive;
+            ? handleStyle.active
+            : handleStyle.passive;
 
         handleRadius = isHighlighted ? 1.5 * handleRadius : handleRadius;
 
@@ -641,10 +648,16 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
     const { element, buttons, event } = evt.detail;
     const toolState = getToolState(element, this.name);
 
-    let isLeftMousePress = buttons === 2;
-    let isActiveContour = this.contourBelongsToCurrentRoi(toolData.roi);
-    if (isLeftMousePress && isActiveContour && this.onContourRightClicked) {
+    const isLeftMousePress = buttons === 2;
+
+    if (event.detail === 2) {
+      this.onContourDoubleClicked({ toolData, event });
+      return;
+    }
+
+    if (isLeftMousePress && this.onContourRightClicked) {
       this.onContourRightClicked({ toolData, event });
+
       return;
     }
 
@@ -1054,8 +1067,9 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
 
     this._deactivateModify(element);
 
-    //in the event that the tool data was deleted via mouse click, early out here to prevent errors downstream
+    // In the event that the tool data was deleted via mouse click, early out here to prevent errors downstream
     const currentTool = this.configuration.currentTool;
+
     if (!toolState.data.hasOwnProperty(currentTool)) {
       return;
     }
