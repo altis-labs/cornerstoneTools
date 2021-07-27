@@ -271,7 +271,6 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
     const modality = seriesModule ? seriesModule.modality : null;
 
     const points = data.handles.points;
-
     if (!points) {
       return;
     }
@@ -1069,9 +1068,8 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
 
     this._deactivateModify(element);
 
-    // In the event that the tool data was deleted via mouse click, early out here to prevent errors downstream
+    //in the event that the tool data was deleted via mouse click, early out here to prevent errors downstream
     const currentTool = this.configuration.currentTool;
-
     if (!toolState.data.hasOwnProperty(currentTool)) {
       return;
     }
