@@ -441,15 +441,15 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
         const lineWidth = isSelected
           ? lineWidthStyle.selected
           : isActive
-            ? lineWidthStyle.active
-            : lineWidthStyle.passive;
+          ? lineWidthStyle.active
+          : lineWidthStyle.passive;
 
         const handleStyle = this.style.handleSize;
         let handleRadius = isSelected
           ? handleStyle.selected
           : isActive
-            ? handleStyle.active
-            : handleStyle.passive;
+          ? handleStyle.active
+          : handleStyle.passive;
 
         handleRadius = isHighlighted ? 1.5 * handleRadius : handleRadius;
 
@@ -652,6 +652,7 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
 
     if (event.detail === 2) {
       this.onContourDoubleClicked({ toolData, event });
+
       return;
     }
 
