@@ -652,6 +652,7 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
 
     if (event.detail === 2) {
       this.onContourDoubleClicked({ toolData, event });
+      preventPropagation(evt);
 
       return;
     }
