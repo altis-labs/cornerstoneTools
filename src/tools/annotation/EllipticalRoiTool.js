@@ -59,6 +59,11 @@ export default class EllipticalRoiTool extends BaseAnnotationTool {
     this.style = null;
     this.visibleToolRoiIds = [];
     this.toolRoiSavedStatuses = null;
+    this.onEllipseClicked = null;
+  }
+
+  setOnEllipseClicked(onEllipseClicked) {
+    this.onEllipseClicked = onEllipseClicked;
   }
 
   setCurrentRoi(roi) {
@@ -384,6 +389,16 @@ export default class EllipticalRoiTool extends BaseAnnotationTool {
     if (this.isOnCurrentRoi(annotation.roi)) {
       moveAnnotation(evt, this, annotation, interactionType);
     }
+    if (!this.onEllipseClicked) {
+      return;
+    }
+    preventPropagation(evt);
+    const {
+      detail: {
+        event: { detail: mouseClickDetail },
+      },
+    } = evt;
+    this.onEllipseClicked(annotation, mouseClickDetail);
   }
 }
 
@@ -597,4 +612,10 @@ function _getEllipseImageCoordinates(startHandle, endHandle) {
     width: Math.round(Math.abs(startHandle.x - endHandle.x)),
     height: Math.round(Math.abs(startHandle.y - endHandle.y)),
   };
+}
+
+function preventPropagation(evt) {
+  evt.stopImmediatePropagation();
+  evt.stopPropagation();
+  evt.preventDefault();
 }
