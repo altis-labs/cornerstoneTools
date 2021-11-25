@@ -457,7 +457,7 @@ export default class FreehandRoiTool extends BaseAnnotationTool {
             const lines = [...data.handles.points[j].lines];
             const points = data.handles.points;
 
-            if (j === points.length - 1 && !data.polyBoundingBox) {
+            if (isActive && j === points.length - 1 && !data.polyBoundingBox) {
               // If it's still being actively drawn, keep the last line to
               // The mouse location
               lines.push(config.mouseLocation.handles.start);
