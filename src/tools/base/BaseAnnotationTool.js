@@ -141,6 +141,10 @@ class BaseAnnotationTool extends BaseTool {
    * @returns {void}
    */
   handleSelectedCallback(evt, toolData, handle, interactionType = 'mouse') {
+    const { readOnly } = toolData;
+    if (readOnly) {
+      return;
+    }
     moveHandleNearImagePoint(evt, this, toolData, handle, interactionType);
   }
 
@@ -156,6 +160,10 @@ class BaseAnnotationTool extends BaseTool {
    * @returns {void}
    */
   toolSelectedCallback(evt, annotation, interactionType = 'mouse') {
+    const { readOnly } = annotation;
+    if (readOnly) {
+      return;
+    }
     moveAnnotation(evt, this, annotation, interactionType);
   }
 
