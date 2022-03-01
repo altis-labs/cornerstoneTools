@@ -59,6 +59,7 @@ export default class LengthTool extends BaseAnnotationTool {
       active: true,
       color: undefined,
       invalidated: true,
+      readOnly: false,
       handles: {
         start: {
           x,
