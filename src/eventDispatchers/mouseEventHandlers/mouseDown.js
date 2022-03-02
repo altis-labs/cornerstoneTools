@@ -85,10 +85,22 @@ export default function(evt) {
     coords,
     'mouse'
   );
+  const annotationToolsWithWriteableHandles = annotationToolsWithMoveableHandles.filter(
+    ({ name }) => {
+      const toolState = getToolState(element, name);
+      const { data } = findHandleDataNearImagePoint(
+        element,
+        toolState,
+        name,
+        coords
+      );
+      return !data.readOnly;
+    }
+  );
 
-  if (annotationToolsWithMoveableHandles.length > 0) {
-    const firstToolWithMoveableHandles = annotationToolsWithMoveableHandles[0];
-    let toolState = getToolState(element, firstToolWithMoveableHandles.name);
+  if (annotationToolsWithWriteableHandles.length > 0) {
+    const firstToolWithMoveableHandles = annotationToolsWithWriteableHandles[0];
+    const toolState = getToolState(element, firstToolWithMoveableHandles.name);
 
     if (firstToolWithMoveableHandles.roi) {
       const activeRoiId = firstToolWithMoveableHandles.roi.id;
