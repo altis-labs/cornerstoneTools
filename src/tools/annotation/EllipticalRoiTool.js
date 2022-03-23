@@ -393,12 +393,10 @@ export default class EllipticalRoiTool extends BaseAnnotationTool {
       return;
     }
     preventPropagation(evt);
-    const {
-      detail: {
-        event: { detail: mouseClickDetail },
-      },
-    } = evt;
-    this.onEllipseClicked(annotation, mouseClickDetail);
+
+    const { detail } = evt;
+
+    this.onEllipseClicked(annotation, detail);
   }
 }
 
