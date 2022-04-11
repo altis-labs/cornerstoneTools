@@ -233,7 +233,8 @@ export default class LengthTool extends BaseAnnotationTool {
 
       data.unit = suffix;
 
-      return `${data.length.toFixed(2)} ${suffix}`;
+      const { formatDecimals = 1 } = this.configuration;
+      return `${data.length.toFixed(formatDecimals)} ${suffix}`;
     }
 
     function textBoxAnchorPoints(handles) {
