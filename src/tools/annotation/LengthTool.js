@@ -135,7 +135,11 @@ export default class LengthTool extends BaseAnnotationTool {
 
   renderToolData(evt) {
     const eventData = evt.detail;
-    const { handleRadius, drawHandlesOnHover } = this.configuration;
+    const {
+      handleRadius,
+      drawHandlesOnHover,
+      formatDecimals = 1,
+    } = this.configuration;
     const toolData = getToolState(evt.currentTarget, this.name);
 
     if (!toolData) {
@@ -206,7 +210,12 @@ export default class LengthTool extends BaseAnnotationTool {
           }
         }
 
-        const text = textBoxText(data, rowPixelSpacing, colPixelSpacing);
+        const text = textBoxText(
+          data,
+          rowPixelSpacing,
+          colPixelSpacing,
+          formatDecimals
+        );
 
         drawLinkedTextBox(
           context,
@@ -223,7 +232,7 @@ export default class LengthTool extends BaseAnnotationTool {
       });
     }
 
-    function textBoxText(data, rowPixelSpacing, colPixelSpacing) {
+    function textBoxText(data, rowPixelSpacing, colPixelSpacing, decimals) {
       // Set the length text suffix depending on whether or not pixelSpacing is available
       let suffix = 'mm';
 
@@ -233,7 +242,7 @@ export default class LengthTool extends BaseAnnotationTool {
 
       data.unit = suffix;
 
-      return `${data.length.toFixed(2)} ${suffix}`;
+      return `${data.length.toFixed(decimals)} ${suffix}`;
     }
 
     function textBoxAnchorPoints(handles) {
