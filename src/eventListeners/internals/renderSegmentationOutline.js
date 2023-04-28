@@ -20,7 +20,15 @@ export default function renderSegmentationOutline(
     configuration.outlineWidth
   );
 
-  renderOutline(evt, outline, labelmap3D.colorLUTIndex, isActiveLabelMap);
+  const { colorOffset } = labelmap3D;
+
+  renderOutline(
+    evt,
+    outline,
+    labelmap3D.colorLUTIndex,
+    isActiveLabelMap,
+    colorOffset
+  );
 }
 
 /**
@@ -29,14 +37,16 @@ export default function renderSegmentationOutline(
  * @param  {Object} evt             The cornerstone event.
  * @param  {Object} outline         The outline to render.
  * @param  {number} colorLUTIndex   The index of the colorLUT.
- * @param  {number} isActiveLabelMap   Whether the labelmap is active.
+ * @param  {number} isActiveLabelMap   Whether the labelmap is active. *
+ * @param  {number} [colorOffset = 0] The offset into the colorLUT to determine color
  * @returns {null}
  */
 export function renderOutline(
   evt,
   outline,
   colorLUTIndex,
-  isActiveLabelMap = true
+  isActiveLabelMap = true,
+  colorOffset = 0
 ) {
   const { configuration, state } = segmentationModule;
   const eventData = evt.detail;
@@ -57,7 +67,12 @@ export function renderOutline(
   draw(context, context => {
     for (let i = 1; i < outline.length; i++) {
       if (outline[i]) {
-        const color = colorLutTable[i];
+        let colorIndex = i;
+        if (colorOffset) {
+          colorIndex += colorOffset;
+        }
+
+        const color = colorLutTable[colorIndex];
 
         drawLines(
           context,

@@ -16,6 +16,7 @@ import { triggerLabelmapModifiedEvent } from '../../../util/segmentation';
  * @param  {number[][]} [segmentsOnLabelmapArray] An array of array of segments on each imageIdIndex.
  *                       If not present, is calculated.
  * @param  {colorLUTIndex} [colorLUTIndex = 0] The index of the colorLUT to use to render the segmentation.
+ * @param  {number} [colorOffset = 0] The offset into the colorLUT to determine color
  * @returns {null}
  */
 function setLabelmap3DForElement(
@@ -24,7 +25,8 @@ function setLabelmap3DForElement(
   labelmapIndex,
   metadata = [],
   segmentsOnLabelmapArray,
-  colorLUTIndex = 0
+  colorLUTIndex = 0,
+  colorOffset = 0
 ) {
   const element = getElement(elementOrEnabledElementUID);
 
@@ -43,7 +45,8 @@ function setLabelmap3DForElement(
     metadata,
     numberOfFrames,
     segmentsOnLabelmapArray,
-    colorLUTIndex
+    colorLUTIndex,
+    colorOffset
   );
 
   triggerLabelmapModifiedEvent(element, labelmapIndex);
@@ -63,6 +66,7 @@ function setLabelmap3DForElement(
  * @param  {number[][]} [segmentsOnLabelmapArray] An array of array of segments on each imageIdIndex.
  *                       If not present, is calculated.
  * @param  {colorLUTIndex} [colorLUTIndex = 0] The index of the colorLUT to use to render the segmentation.
+ * @param  {number} [colorOffset = 0] The offset into the colorLUT to determine color
  * @returns {null}
  */
 function setLabelmap3DByFirstImageId(
@@ -72,7 +76,8 @@ function setLabelmap3DByFirstImageId(
   metadata = [],
   numberOfFrames,
   segmentsOnLabelmapArray,
-  colorLUTIndex = 0
+  colorLUTIndex = 0,
+  colorOffset = 0
 ) {
   let brushStackState = state.series[firstImageId];
 
@@ -94,6 +99,7 @@ function setLabelmap3DByFirstImageId(
     segmentsHidden: [],
     undo: [],
     redo: [],
+    colorOffset,
   };
 
   const labelmaps2D = brushStackState.labelmaps3D[labelmapIndex].labelmaps2D;

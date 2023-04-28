@@ -36,7 +36,7 @@ export function getLabelmapCanvas(evt, labelmap3D, labelmap2D) {
   const { image } = eventData;
   const cols = image.width;
   const rows = image.height;
-  const { segmentsHidden } = labelmap3D;
+  const { segmentsHidden, colorOffset } = labelmap3D;
   const pixelData = labelmap2D.pixelData;
   const colorLutTable = state.colorLutTables[labelmap3D.colorLUTIndex];
   const canvasElement = document.createElement('canvas');
@@ -54,7 +54,12 @@ export function getLabelmapCanvas(evt, labelmap3D, labelmap2D) {
     const segmentIndex = pixelData[i];
 
     if (segmentIndex !== 0 && !segmentsHidden[segmentIndex]) {
-      const color = colorLutTable[pixelData[i]];
+      let colorIndex = pixelData[i];
+      if (colorOffset) {
+        colorIndex += colorOffset;
+      }
+
+      const color = colorLutTable[colorIndex];
 
       // Modify ImageData.
       data[4 * i] = color[0]; // R value
